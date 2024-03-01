@@ -10,24 +10,4 @@ gurobi.lic
 *gurobi.lic
 
 
-# pkl data and artifact models
-.pkl
-**/.pkl
-*.pkl
-
-# file with sensible information
-.xlsx
-**/.xlsx
-*.xlsx
-
-# files images
-.png
-**/.png
-*.png
-
-.html
-**/.html
-*.html
-
-
 
