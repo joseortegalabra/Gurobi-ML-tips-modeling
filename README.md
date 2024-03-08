@@ -9,14 +9,13 @@ The examples are created using the following network.
 ### Optimization problem
 This network can be represent as the following optimization problem
 
--- complete --
-
 
 ### Significado de las variables en el diagrama
-- **X: Variables Primarias**: Variables de decisión de un optimizador y features de un modelo de machine learning. No se origina de ninguna relación anterior
-- **Y: Variables Targets**: Variables de decisión de un optimizador y target de un modelo de machine learning
-- **Z: Variables Secundarias**: Variables de decisión de un optimizador y features de un modelo de machine learning. Se diferencia de las variables primarias en que las variables secundarias se originan a partir de una relación con una Variable target
-- **O: Variables Observadas**: NO son variables de decisión de un optimizador y solo son features de un modelo de machine learning
+- **X: Variables Primarias**: Decision variables of an optimizer and characteristics of a machine learning model. No previous relationship arises
+- **Y: Variables Targets**: Decision variables of an optimizer and target of a machine learning model
+- **Z: Variables Secundarias**: Decision variables of an optimizer and features of a machine learning model. It differs from primary variables in that secondary variables originate from a relationship with a target variable.
+- **O: Variables Observadas**: They are NOT decision variables of an optimizer and are only features of a machine learning model. For this example, in the optimizer they are also defined as decision variables but their values are set to the observed value (a constraint is defined to set their values)
+- **TL: Tank level**: level of the tanks
 
 ### Order Folders
 - **0_temples**: contains a basic template of notebooks to start working in this repo and how to acess to gurobi with and without licence
@@ -25,8 +24,8 @@ This network can be represent as the following optimization problem
 - **3_optimization_tips**: contains tips about how to use gurobi to do write some constraints with gurobi-pandas and gurobi-machine-learning
     - **i_gurobi_pandas**: contains codes with examples how to use gurobi and gurobi pandas to write differents constraints
     - **ii_gurobi_machine_learning**: contains codes with examples how to connect machine learning models as constrains in gurobi using gurobi-machine-learning package
-    - **iii_gurobi_automatization_optimizer**: contains codes how to automatize the creation of gurobi models.
-- **---> 4_full_example_optimization_tanks**: contain a full example about how to solve the full network (using all the tips development in the previous folder) and also, then how to automatize the creaton of optimizer for this kind of problems
+- **4_example_semi_automatization**: contains codes to how automatize part of the optimization codes. Automatizaciones que permiten cambiar la cantidad de variables de decision mientras que mantiene la estructura de la red, también se pueden cambiar límites de las variables de decisión pero ninguna modificación a la estructura
+- **5_example_full_automatization_optimization**: contain a full example about how to solve the full network (using all the tips development in the previous folder) and also how to automatize the creation of optimizer changing the structure of the network. Using a series of configuration file and full parametrized code it is possible define any kind of optimization structure while the heart of the problem is the same
 - **artifacts**: contain artifact, data and models used in the full example "4_example_optimization_tanks"
 - **config**: contain the configuration files to get the models and to build the full optimizer
       - **config_ml_models_development**: configuration files to train ml models
@@ -50,9 +49,22 @@ This network can be represent as the following optimization problem
 - **5_piecewise_model_observed_variables**: how to train a "piecewise model". In this case, split the data according a observed features (that are not decision variable in the optimization model) and train differetns models according this segmentation. Then, load the ml model according the value of the observed variable
 - In the folder 3_optimization_tips/iii_gurobi_automatization_optimizer there a notebook to try to automtize the construction of gurobi optimizer for this kind of problems (semi automatization)
 
-### FULL EXAMPLE -  4_full_example_optimization_tanks
-In the folder  4_full_example_optimization_tanks there a full example apply all the knowledge of previous notebook to develop the codes of the diagram. 
+### FULL EXAMPLE -  5_example_full_automatization_optimization
+In the folder  5_example_full_automatization_optimization there a full example apply all the knowledge of previous notebook to develop the codes of the diagram. 
 
 There two notebooks:
-    - the first represent a hardoded optimization model (I recommend start always defining te optimization problem and write an hardoded because is more easy and can relationate the variables in a easy way). 
-    - **the second one is the automatization of the previous notebook using the configuration files to create this kind of problems changing the number of variables and the number of process and tanks!!!**
+- the first represent a hardoded optimization model (I recommend start always defining te optimization problem and write an hardoded because is more easy and can relationate the variables in a easy way).
+
+- **the second one is the automatization of the previous notebook using the configuration files to create this kind of problems changing the number of variables and the number of process and tanks!!!**
+
+- **In the file "cofig/optimization_engine/config_optimization" there are located the configuration files to the full automatization of gurobi** engine for this use case. The list of configuration files are:
+    - AllFeatures: map all the features and targets (decision variables) (primary, secondary, observed, target and tank levels)
+    - IndexTime: indicate the time horizon to the optimizer
+    - InitialValues: initial values of the decision varibles. Note that some features are not fixed its initial values. Probably, the best choice is define the initial values of all decision variables, this example is not the case but it is on you to modify the codes to do that
+    - MapProcessMLmodels: map the name of the model (ex: "process_output") and the features and target of each model
+    - MapTanks: map the "tank name" and all the inputs and outputs for each tank
+    - ModelsML: map the artifacts of ml models used in each model ("process_output")
+
+- Mapping in detail all the models (with its features and target) and all the tanks (with its inputs and outputs) are the unique condition to build this optimization network (and a matrix of the graph for this aproach was not neccesary)
+
+- Note that there are other folder "config/optimization_engine/ml_models" that have the features and target for each model individually. This is not used and represents the artifacts generated after the process of training each model individually. Also is generated an example of the data used in the trainning process
